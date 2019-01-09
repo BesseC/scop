@@ -4,8 +4,8 @@ CC = gcc
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
 LIB_PATH = ./lib/
-INC_PATH = ./include/ $(LIB_PATH)libft/include/ $(LIB_PATH)glfw/include/ \
-		   			$(LIB_PATH)glew/include/
+INC_PATH = ./include/ $(LIB_PATH)libft/includes/ $(LIB_PATH)glfw/include/ \
+		   			$(LIB_PATH)glew/include/ $(LIB_PATH)libmat/includes/
 
 GCC_FLGS = -pedantic -Wall -Wextra
 GCC_LIBS = lib/glfw/src/libglfw3.a lib/glew/lib/libGLEW.a  -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo 
@@ -13,7 +13,7 @@ GCC_LIBS = lib/glfw/src/libglfw3.a lib/glew/lib/libGLEW.a  -framework AppKit -fr
 SRC_NAME = main.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
-LIB_NAME = libft glew/lib glfw/src
+LIB_NAME = libft libmat glew/lib glfw/src
 
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
@@ -24,7 +24,8 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 		make -C $(LIB_PATH)libft -j
-				$(CC) $(GCC_FLGS) $(LIB) -lft $(INC) $(OBJ) $(GCC_LIBS) -o $(NAME)
+		make -C $(LIB_PATH)libmat
+				$(CC) $(GCC_FLGS) $(LIB) -lft -lmat $(INC) $(OBJ) $(GCC_LIBS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 		mkdir -p $(OBJ_PATH)
@@ -36,6 +37,7 @@ clean:
 
 fclean: clean
 		make -C $(LIB_PATH)libft fclean
+		make -C $(LIB_PATH)libmat fclean
 				rm -fv $(NAME)
 
 re: fclean all

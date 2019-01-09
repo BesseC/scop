@@ -1,5 +1,16 @@
 #include <stdio.h>
 #include "includes/libmat.h"
+
+void printfmat(t_mat4 mat)
+{
+  for(int i = 0; i < 16;i++)
+  {
+    printf("%0.2f ", mat.m[i]);
+    if (i % 4 == 3)
+      printf("\n");
+  }
+}
+
 int main(void)
 {
   t_mat4 mat;
@@ -40,45 +51,43 @@ int main(void)
   mat2.m[13] = -2;
   mat2.m[14] = 5;
   mat2.m[15] = 2;
+
+/*         SET            */
   set_mat4(&mat, 2);
-  mat3 = mat4_add(mat1, mat2);
-
-
-
-
-
   printf("set\n");
-  for(int i = 0; i < 16;i++)
-  {
-    printf("%0.2f ", mat.m[i]);
-    if (i % 4 == 3)
-      printf("\n");
-  }
-
+  printfmat(mat);
+/*         Identité       */
+  mat4_id(&mat);
+  printf("id\n");
+  printfmat(mat);
+/*          ADD           */
+  mat3 = mat4_add(mat1, mat2);
   printf("add\n");
-  for(int i = 0; i < 16;i++)
-  {
-    printf("%0.2f ", mat3.m[i]);
-    if (i % 4 == 3)
-      printf("\n");
-  }
+  printfmat(mat3);
+/*          SUB           */
   mat3 = mat4_sub(mat1, mat2);
   printf("sub\n");
-  for(int i = 0; i < 16;i++)
-  {
-    printf("%0.2f ", mat3.m[i]);
-    if (i % 4 == 3)
-      printf("\n");
-  }
+  printfmat(mat3);
+/*         MULT           */
   mat3 = mat4_mult(mat1, mat2);
   printf("mult\n");
-  for(int i = 0; i < 16;i++)
-  {
-    printf("%0.2f ", mat3.m[i]);
-    if (i % 4 == 3)
-      printf("\n");
-  }
+  printfmat(mat3);
+/*        ROTATION        */
+mat3 = mat4_rot_axis(mat1, AXIS_X, 60);
+printf("rot x\n");
+printfmat(mat3);
 
+mat3 = mat4_rot_axis(mat1, AXIS_Y, 60);
+printf("rot y\n");
+printfmat(mat3);
+
+mat3 = mat4_rot_axis(mat1, AXIS_Z, 60);
+printf("rot z\n");
+printfmat(mat3);
+/*  SCALING               */
+mat3 = mat4_scale(mat1, 5);
+printf("scale\n");
+printfmat(mat3);
 
   return (0);
 }

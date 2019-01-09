@@ -31,12 +31,17 @@ different order than previous versions of OS X.
 #include <GL/glew.h>	/* include GLEW and new version of GL on Windows */
 #include <GLFW/glfw3.h> /* GLFW helper library */
 #include <stdio.h>
+#include "libft.h"
+#include "libmat.h"
 
 int main() {
 	GLFWwindow *window = NULL;
 	const GLubyte *renderer;
 	const GLubyte *version;
 	GLuint vao;
+	t_mat4 transform;
+	GLint transformLocation;
+	mat4_id(&transform);
 //	GLuint vbo;
 	GLuint ebo;
 
@@ -99,9 +104,10 @@ float colours[] = {
 					"layout(location = 0) in vec3 vertex_position;"
 					"layout(location = 1) in vec3 vertex_colour;"
 															"out vec3 colour;"
+															"uniform mat4 transform;"
 															"void main () {"
 															"colour = vertex_colour;"
-															"gl_Position = vec4(vertex_position, 1.0);"
+															"gl_Position = transform * vec4(vertex_position, 1.0);"
 															"}";
 
 	/* the fragment shader colours each fragment (pixel-sized area of the
@@ -160,7 +166,7 @@ float colours[] = {
 	glGenBuffers( 1, &vbo );
 	//glGenBuffers(1, &ebo);
 
-glBindVertexArray( vao );
+	glBindVertexArray( vao );
 
 	glBindBuffer( GL_ARRAY_BUFFER, vbo );
 	glBufferData( GL_ARRAY_BUFFER, sizeof( points ), points, GL_STATIC_DRAW );
@@ -206,6 +212,7 @@ glBindVertexArray( vao );
 	glBindAttribLocation(shader_programme, 0, "vertex_position");
 	glBindAttribLocation(shader_programme, 1, "vertex_colour");
 	glLinkProgram( shader_programme );
+	transformLocation = glGetUniformLocation(shader_programme, "transform");
 
 
 	/***********/
@@ -240,6 +247,13 @@ glBindVertexArray( vao );
 		/* wipe the drawing surface clear */
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		glUseProgram( shader_programme );
+
+		transform = mat4_rot_axis(transform, AXIS_X, 0.5);
+		transform = mat4_rot_axis(transform, AXIS_Y, 1);
+		transformLocation = glGetUniformLocation(shader_programme, "transform");
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transform.m );
+
+
 		glBindVertexArray( vao );
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
 	//	glDrawElements( GL_TRIANGLES, 6 ,GL_UNSIGNED_INT, 0 );

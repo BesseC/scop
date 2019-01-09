@@ -6,12 +6,12 @@
 #    By: cbesse <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/07 16:59:01 by cbesse            #+#    #+#              #
-#    Updated: 2018/12/21 16:58:50 by cbesse           ###   ########.fr        #
+#    Updated: 2019/01/07 16:33:21 by cbesse           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libmat.a
-SRC = set_mat4.c mat4_add.c mat4_sub.c mat4_mult.c
+SRC = set_mat4.c mat4_add.c mat4_sub.c mat4_mult.c mat4_rot.c mat4_scale.c
 OBJ = $(SRC:.c=.o)
 CC = cc -g3
 FLAGS = -Wall -Werror -Wextra
