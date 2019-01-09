@@ -13,6 +13,7 @@
 #ifndef LIBMAT_H
 # define LIBMAT_H
 # include <math.h>
+# include <stdio.h>
 # define AXIS_X 0
 # define AXIS_Y 1
 # define AXIS_Z 2
@@ -36,7 +37,8 @@ void set_mat4(t_mat4 *m, float f);
 t_mat4  mat4_add(t_mat4 m1, t_mat4 m2);
 t_mat4  mat4_sub(t_mat4 m1, t_mat4 m2);
 t_mat4  mat4_mult(t_mat4 m1, t_mat4 m2);
-t_mat4 mat4_rot_axis(t_mat4 m, int axis, float angle);
+t_mat4  mat4_rot_axis(t_mat4 m, int axis, float angle);
 t_mat4  mat4_scale(t_mat4 m, float f);
 void    mat4_id(t_mat4 *m);
+void printfmat(t_mat4 mat);
 #endif
