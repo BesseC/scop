@@ -1,8 +1,4 @@
-#include <GL/glew.h>	/* include GLEW and new version of GL on Windows */
-#include <GLFW/glfw3.h> /* GLFW helper library */
-#include <stdio.h>
-#include "libft.h"
-#include "libmat.h"
+#include "scop.h"
 
 #define WIDHT 1024
 #define HEIGHT 800
@@ -24,7 +20,7 @@ void	set_projection(t_mat4 *m, float fov)
   m->m[14] = -2 * far * near / (far - near);
 }
 
-int main() {
+int main(int ac, char **av) {
 	GLFWwindow *window = NULL;
 	const GLubyte *renderer;
 	const GLubyte *version;
@@ -32,7 +28,6 @@ int main() {
 	t_mat4 view;
 	t_mat4 model;
 	t_mat4 projection;
-	GLint transformLocation;
 	GLint modelLocation;
 	GLint viewLocation;
 	GLint projectionLocation;
@@ -40,32 +35,82 @@ int main() {
 	mat4_id(&model);
 	set_projection(&projection, 90);
   view.m[14] = -5;
-	//mat4_id(&projection);
 	GLuint ebo;
-	GLfloat points[] = {
-				0.5f,  0.5f, 0.5f,   1.0f, 0.0f, 0.0f, // Top Right
-				-0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 0.0f, // Bottom Right
-				0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f, // Bottom Left
-				-0.5f, -0.5f, 0.5f,		1.0f, 1.0f, 0.0f, //  Top Left
-				0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f, // Top Right
-				-0.5f, 0.5f, -0.5f,   0.0f, 1.0f, 0.0f, // Bottom Right
-				0.5f, -0.5f, -0.5f,   0.0f, 0.0f, 1.0f, // Bottom Left
-				-0.5f, -0.5f, -0.5f,		1.0f, 1.0f, 0.0f //  Top Left
-		};
-	GLuint indices[] = {
-		0,1,2,
-		1,2,3,
-		0,4,6,
-		0,2,6,
-		0,4,1,
-		4,1,5,
-		4,6,7,
-		4,5,7,
-		1,5,7,
-		1,3,7,
-		2,6,3,
-		3,7,6
-	};
+	// GLfloat points[] = {
+	// 		// 	//0.5f,  0.5f, 0.5f,   1.0f, 0.0f, 0.0f, // Top Right
+	// 		// 	1.0f, 1.0f, 0.0f, 			0.1f, 0.1f, 0.1f,
+	// 		// 	-0.5f, 0.5f, 0.5f,   0.66f, 0.66f, 0.66f, // Bottom Right
+	// 		// 	0.5f, -0.5f, 0.5f,   0.33f, 0.33f, 0.33f, // Bottom Left
+	// 		// //	-0.5f, -0.5f, 0.5f,		1.0f, 0.0f, 0.0f, //  Top Left
+	// 		// //  0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f, // Top Right
+	// 		// 	-0.5f, 0.5f, -0.5f,   0.1f, 0.1f, 0.1f, // Bottom Right
+	// 		// 	0.5f, -0.5f, -0.5f,   0.66f, 0.66f, 0.66f, // Bottom Left
+	// 		// //	-0.5f, -0.5f, -0.5f,		0.0f, 1.0f, 0.0f //  Top Left
+	// 		0,0,0,       0.1,0.1,0.1,
+	// 		1,0,0,       0.33,0.33,0.33,
+	// 		1,1,0,       0.66,0.66,0.66,
+	// 		0,1,0,       0.1,0.1,0.1,
+	// 		0.5,0.5,1.6, 0.33,0.33,0.33
+	//
+	// 	};
+	// GLuint indices[] = {
+	// 	/*0,1,2,
+	// 	1,2,3,
+	// 	0,4,6,
+	// 	0,2,6,
+	// 	0,4,1,
+	// 	4,1,5,
+	// 	4,6,7,
+	// 	4,5,7,
+	// 	1,5,7,
+	// 	1,3,7,
+	// 	2,6,3,
+	// 	3,7,6*/
+	// 	// 0,1,3,
+	// 	// 0,3,4,
+	// 	// 0,4,2,
+	// 	// 0,1,2,
+	// 	// 1,2,4,
+	// 	// 1,3,4
+	// 	3,0,1,
+	// 	2,3,1,
+	// 	4,1,0,
+	// 	3,4,0,
+	// 	2,4,3,
+	// 	4,2,1
+	// };
+	//  	int idlen  = 18;
+	//  	int nbv = 30;
+
+GLuint *indices = NULL;
+GLfloat *points = NULL;
+	int idlen ;
+	int nbv ;
+idlen = load_obj(&indices, &points, av[1], &nbv);
+
+	printf("     VERTEX       |       COLOR\n");
+	int i = 0;
+	while(i < nbv)
+	{
+		printf("%0.2f ",points[i]);
+		i++;
+		if (i % 6 == 0)
+			printf("\n");
+		else if(i % 3 == 0)
+			printf("  |  ");
+	}
+i = 0;
+	printf("     INDICES\n");
+	while(i < idlen)
+	{
+		printf("%d ",indices[i]);
+		i++;
+		if (i % 3 == 0)
+			printf("\n");
+	}
+
+
+
 	/* these are the strings of code for the shaders
 	the vertex shader positions each vertex point */
 	const char *vertex_shader = "#version 410\n"
@@ -130,9 +175,9 @@ int main() {
 	glGenBuffers(1, &ebo);
 	glBindVertexArray( vao );
 	glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( points ), points, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( GLfloat ) * nbv, points, GL_STATIC_DRAW );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( indices ), indices, GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( GLuint ) * idlen, indices, GL_STATIC_DRAW );
 
 	/* the vertex array object (VAO) is a little descriptor that defines which
 	data from vertex buffer objects should be used as input variables to vertex
@@ -182,6 +227,7 @@ int main() {
 		glUseProgram( shader_programme );
 
 		model = mat4_rot_axis(model, AXIS_X, 0.5);
+		//model = mat4_rot_axis(model, AXIS_Z, 0.25);
 		model = mat4_rot_axis(model, AXIS_Y, 1);
 		modelLocation = glGetUniformLocation(shader_programme, "model");
 		viewLocation = glGetUniformLocation(shader_programme, "view");
@@ -192,7 +238,7 @@ int main() {
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.m );
 		glBindVertexArray( vao );
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
-   	glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0 );
+   	glDrawElements( GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0 );
 		/* update other events like input handling */
 		glfwPollEvents();
 		/* put the stuff we've been drawing onto the display */
