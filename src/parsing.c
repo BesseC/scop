@@ -40,21 +40,21 @@ GLfloat *set_color(GLfloat *array, int length)
 {
   if(length/6%3 == 0)
   {
-    array[length - 3] = 0.1f;
-    array[length - 2] = 0.1f;
-    array[length - 1] = 0.1f;
+    array[length - 3] = 1.0f;
+    array[length - 2] = 0.0f;
+    array[length - 1] = 0.0f;
   }
   else if(length/6%3 == 1)
   {
-    array[length - 3] = 0.33f;
-    array[length - 2] = 0.33f;
-    array[length - 1] = 0.33f;
+    array[length - 3] = 0.0f;
+    array[length - 2] = 1.0f;
+    array[length - 1] = 0.0f;
   }
   else if(length/6%3 == 2)
   {
-    array[length - 3] = 0.66f;
-    array[length - 2] = 0.66f;
-    array[length - 1] = 0.66f;
+    array[length - 3] = 0.0f;
+    array[length - 2] = 0.0f;
+    array[length - 1] = 1.0f;
   }
   return (array);
 }

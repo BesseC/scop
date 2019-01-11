@@ -6,30 +6,30 @@
 /*   By: cbesse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/21 17:18:06 by cbesse            #+#    #+#             */
-/*   Updated: 2018/12/21 17:18:07 by cbesse           ###   ########.fr       */
+/*   Updated: 2019/01/10 16:02:25 by cbesse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/libmat.h"
 
-t_mat4  mat4_mult(t_mat4 m1, t_mat4 m2)
+t_mat4	mat4_mult(t_mat4 m1, t_mat4 m2)
 {
-  t_mat4 m3;
-  int h;
-  int w;
-  int i;
+	t_mat4	m3;
+	int		h;
+	int		w;
+	int		i;
 
-  h = -1;
-  while(++h < 4)
-  {
-    w = -1;
-    while(++w < 4)
-    {
-      i = -1;
-      m3.m[h  * 4  + w] = 0;
-      while(++i < 4)
-        m3.m[h  * 4  + w] += m1.m[h * 4 + i] * m2.m[i * 4 + w];
-    }
-  }
-  return(m3);
+	h = -1;
+	while (++h < 4)
+	{
+		w = -1;
+		while (++w < 4)
+		{
+			i = -1;
+			m3.m[h * 4 + w] = 0;
+			while (++i < 4)
+				m3.m[h * 4 + w] += m1.m[h * 4 + i] * m2.m[i * 4 + w];
+		}
+	}
+	return (m3);
 }

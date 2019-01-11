@@ -6,33 +6,33 @@
 /*   By: cbesse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/21 16:39:33 by cbesse            #+#    #+#             */
-/*   Updated: 2018/12/21 16:39:33 by cbesse           ###   ########.fr       */
+/*   Updated: 2019/01/10 16:03:43 by cbesse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/libmat.h"
 
-void set_mat4(t_mat4 *m, float f)
+void	set_mat4(t_mat4 *m, float f)
 {
-  int i;
+	int	i;
 
-  i = -1;
-  while(++i < 16)
-  {
-    m->m[i] = f;
-  }
+	i = -1;
+	while (++i < 16)
+	{
+		m->m[i] = f;
+	}
 }
 
-void mat4_id(t_mat4 *m)
+void	mat4_id(t_mat4 *m)
 {
-  int i;
+	int	i;
 
-  i = -1;
-  while(++i < 16)
-  {
-    if (i == 0 || i == 5 || i == 10 || i == 15)
-      m->m[i] = 1;
-    else
-      m->m[i] = 0;
-  }
+	i = -1;
+	while (++i < 16)
+	{
+		if (i == 0 || i == 5 || i == 10 || i == 15)
+			m->m[i] = 1;
+		else
+			m->m[i] = 0;
+	}
 }

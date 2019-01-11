@@ -3,6 +3,53 @@
 #define WIDHT 1024
 #define HEIGHT 800
 
+GLchar	*get_shader_source(char *filename)
+{
+	int		fd;
+	int		ret;
+	char	buffer[BUFFER_SIZE];
+	char	*source;
+	char	*del;
+
+	source = ft_strnew(BUFFER_SIZE);
+	fd = open(filename, O_RDONLY);
+	while ((ret = read(fd, buffer, BUFFER_SIZE)))
+	{
+		buffer[ret] = '\0';
+		del = source;
+		source = ft_strjoin(source, buffer);
+		ft_strdel(&del);
+	}
+	close(fd);
+	return (source);
+}
+
+t_mat4 key_callback(GLFWwindow* window, t_mat4 view)
+{
+		int key;
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		key = glfwGetKey(window, 333);
+		if (key == 1)
+    	view = mat4_translate(view,0,0,0.25);
+		key = glfwGetKey(window, 334);
+		if (key == 1)
+    	view = mat4_translate(view,0,0,-0.25);
+		key = glfwGetKey(window, 263);
+		if (key == 1)
+	   	view = mat4_translate(view,0.25,0,0);
+		key = glfwGetKey(window, 262);
+		if (key == 1)
+	  	view = mat4_translate(view,-0.25,0,0);
+		key = glfwGetKey(window, 265);
+		if (key == 1)
+		 	view = mat4_translate(view,0,0.25,0);
+		key = glfwGetKey(window, 264);
+		if (key == 1)
+		 	view = mat4_translate(view,0,-0.25,0);
+		return(view);
+}
+
 void	set_projection(t_mat4 *m, float fov)
 {
 	float	s;
@@ -36,58 +83,12 @@ int main(int ac, char **av) {
 	set_projection(&projection, 90);
   view.m[14] = -5;
 	GLuint ebo;
-	// GLfloat points[] = {
-	// 		// 	//0.5f,  0.5f, 0.5f,   1.0f, 0.0f, 0.0f, // Top Right
-	// 		// 	1.0f, 1.0f, 0.0f, 			0.1f, 0.1f, 0.1f,
-	// 		// 	-0.5f, 0.5f, 0.5f,   0.66f, 0.66f, 0.66f, // Bottom Right
-	// 		// 	0.5f, -0.5f, 0.5f,   0.33f, 0.33f, 0.33f, // Bottom Left
-	// 		// //	-0.5f, -0.5f, 0.5f,		1.0f, 0.0f, 0.0f, //  Top Left
-	// 		// //  0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f, // Top Right
-	// 		// 	-0.5f, 0.5f, -0.5f,   0.1f, 0.1f, 0.1f, // Bottom Right
-	// 		// 	0.5f, -0.5f, -0.5f,   0.66f, 0.66f, 0.66f, // Bottom Left
-	// 		// //	-0.5f, -0.5f, -0.5f,		0.0f, 1.0f, 0.0f //  Top Left
-	// 		0,0,0,       0.1,0.1,0.1,
-	// 		1,0,0,       0.33,0.33,0.33,
-	// 		1,1,0,       0.66,0.66,0.66,
-	// 		0,1,0,       0.1,0.1,0.1,
-	// 		0.5,0.5,1.6, 0.33,0.33,0.33
-	//
-	// 	};
-	// GLuint indices[] = {
-	// 	/*0,1,2,
-	// 	1,2,3,
-	// 	0,4,6,
-	// 	0,2,6,
-	// 	0,4,1,
-	// 	4,1,5,
-	// 	4,6,7,
-	// 	4,5,7,
-	// 	1,5,7,
-	// 	1,3,7,
-	// 	2,6,3,
-	// 	3,7,6*/
-	// 	// 0,1,3,
-	// 	// 0,3,4,
-	// 	// 0,4,2,
-	// 	// 0,1,2,
-	// 	// 1,2,4,
-	// 	// 1,3,4
-	// 	3,0,1,
-	// 	2,3,1,
-	// 	4,1,0,
-	// 	3,4,0,
-	// 	2,4,3,
-	// 	4,2,1
-	// };
-	//  	int idlen  = 18;
-	//  	int nbv = 30;
-
-GLuint *indices = NULL;
-GLfloat *points = NULL;
+	GLuint *indices = NULL;
+	GLfloat *points = NULL;
 	int idlen ;
 	int nbv ;
 idlen = load_obj(&indices, &points, av[1], &nbv);
-
+/*
 	printf("     VERTEX       |       COLOR\n");
 	int i = 0;
 	while(i < nbv)
@@ -108,12 +109,12 @@ i = 0;
 		if (i % 3 == 0)
 			printf("\n");
 	}
-
+*/
 
 
 	/* these are the strings of code for the shaders
 	the vertex shader positions each vertex point */
-	const char *vertex_shader = "#version 410\n"
+	const GLchar *vertex_shader;/* = "#version 410\n"
 					"layout(location = 0) in vec3 vertex_position;"
 					"layout(location = 1) in vec3 vertex_colour;"
 															"out vec3 colour;"
@@ -123,15 +124,17 @@ i = 0;
 															"void main () {"
 															"colour = vertex_colour;"
 															"gl_Position = projection * view * model * vec4(vertex_position, 1.0);"
-															"}";
+															"}";*/
 	/* the fragment shader colours each fragment (pixel-sized area of the
 	triangle) */
-	const char *fragment_shader = "#version 410\n"
+	const GLchar *fragment_shader;/* = "#version 410\n"
 																"in vec3 colour;"
 																"out vec4 frag_colour;"
 																"void main () {"
 																"  frag_colour = vec4(colour, 1.0);"
-																"}";
+																"}";*/
+	vertex_shader = get_shader_source("shaders/vertex.glsl");
+	fragment_shader = get_shader_source("shaders/fragment.glsl");
 	/* GL shader objects for vertex and fragment shader [components] */
 	GLuint vert_shader, frag_shader;
 	/* GL shader programme object [combined, to link] */
@@ -169,6 +172,8 @@ i = 0;
 	glDepthFunc( GL_LESS );
 	/* a vertex buffer object (VBO) is created here. this stores an array of
 	data on the graphics adapter's memory. in our case - the vertex points */
+
+
 	GLuint vbo = 0;
 	glGenVertexArrays( 1, &vao );
 	glGenBuffers( 1, &vbo );
@@ -216,15 +221,17 @@ i = 0;
 			that we have a 'currently displayed' surface, and 'currently being drawn'
 			surface. hence the 'swap' idea. in a single-buffering system we would see
 			stuff being drawn one-after-the-other */
-
 	printfmat(mat4_mult(projection, mat4_mult(view, model)));
-
 
 	while ( !glfwWindowShouldClose( window ) ) {
 		 glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
 		/* wipe the drawing surface clear */
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		glUseProgram( shader_programme );
+		view = key_callback(window, view);
+	/*	printfmat(view);
+		printf("\n");*/
+
 
 		model = mat4_rot_axis(model, AXIS_X, 0.5);
 		//model = mat4_rot_axis(model, AXIS_Z, 0.25);
