@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = libmat.a
-SRC = set_mat4.c mat4_add.c mat4_sub.c mat4_mult.c mat4_rot.c mat4_scale.c mat4_translate.c
+SRC = set_mat4.c mat4_add.c mat4_sub.c mat4_mult.c mat4_rot.c mat4_scale.c mat4_translate.c vec3_add.c vec3_mult.c vec3_set.c vec3_cross.c vec3_negate.c vec3_sub.c vec3_div.c vec3_norm.c vec3_dot.c vec3_normalize.c
 OBJ = $(SRC:.c=.o)
 CC = cc -g3
 FLAGS = -Wall -Werror -Wextra

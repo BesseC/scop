@@ -3,6 +3,8 @@
 #define WIDHT 1024
 #define HEIGHT 800
 
+int g_e = 1;
+
 GLchar	*get_shader_source(char *filename)
 {
 	int		fd;
@@ -29,6 +31,8 @@ t_mat4 key_callback(GLFWwindow* window, t_mat4 view)
 		int key;
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, GL_TRUE);
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+			g_e = !g_e;
 		key = glfwGetKey(window, 333);
 		if (key == 1)
     	view = mat4_translate(view,0,0,0.25);
@@ -81,13 +85,13 @@ int main(int ac, char **av) {
 	mat4_id(&view);
 	mat4_id(&model);
 	set_projection(&projection, 90);
-  view.m[14] = -5;
+  view = mat4_translate(view, 0,0,-5);
 	GLuint ebo;
 	GLuint *indices = NULL;
 	GLfloat *points = NULL;
 	int idlen ;
 	int nbv ;
-idlen = load_obj(&indices, &points, av[1], &nbv);
+	idlen = load_obj(&indices, &points, av[1], &nbv);
 /*
 	printf("     VERTEX       |       COLOR\n");
 	int i = 0;
@@ -232,10 +236,12 @@ i = 0;
 	/*	printfmat(view);
 		printf("\n");*/
 
-
-		model = mat4_rot_axis(model, AXIS_X, 0.5);
+		if (g_e == 1)
+		{
+	//	model = mat4_rot_axis(model, AXIS_X, 0.5);
 		//model = mat4_rot_axis(model, AXIS_Z, 0.25);
 		model = mat4_rot_axis(model, AXIS_Y, 1);
+		}
 		modelLocation = glGetUniformLocation(shader_programme, "model");
 		viewLocation = glGetUniformLocation(shader_programme, "view");
 		projectionLocation = glGetUniformLocation(shader_programme, "projection");
