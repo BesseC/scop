@@ -38,12 +38,12 @@ GLuint	*gluint_array_copy(GLuint *array, int length, int m)
 
 GLfloat *set_color(GLfloat *array, int length)
 {
-  // if(length/6%3 == 0)
-  // {
-    array[length - 3] = 0.33f;
-    array[length - 2] = 0.66f;
-    array[length - 1] = 1.33f;
-  /*}
+   if(length/6%3 == 0)
+   {
+    array[length - 3] = 1.0f;
+    array[length - 2] = 0.0f;
+    array[length - 1] = 0.0f;
+  }
   else if(length/6%3 == 1)
   {
     array[length - 3] = 0.0f;
@@ -55,7 +55,7 @@ GLfloat *set_color(GLfloat *array, int length)
     array[length - 3] = 0.0f;
     array[length - 2] = 0.0f;
     array[length - 1] = 1.0f;
-  }*/
+  }
   return (array);
 }
 
@@ -87,19 +87,16 @@ t_vec3	compute_center_axis(GLfloat *vertices, int num_vertices)
 GLfloat	*center_vertices(GLfloat *vertices, t_vec3 center, int length)
 {
 	int		i;
-	float	tx;
-	float	theta;
+	//float	tx;
+	//float	theta;
 
 	i = 0;
-	theta = 90 * (M_PI / 180);
+	//theta = 90 * (M_PI / 180);
 	while (i < length)
 	{
 		vertices[i] -= center.x;
 		vertices[i + 1] -= center.y;
 		vertices[i + 2] -= center.z;
-		vertices[i] *= 5;
-		vertices[i + 1] *= 5;
-		vertices[i + 2] *= 5;
 		/*tx = vertices[i] * cos(theta) - vertices[i + 2] * sin(theta);
 		vertices[i + 2] = vertices[i] * sin(theta) + vertices[i + 2] * cos(theta);
 		vertices[i] = tx;*/

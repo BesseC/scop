@@ -118,27 +118,10 @@ i = 0;
 
 	/* these are the strings of code for the shaders
 	the vertex shader positions each vertex point */
-	const GLchar *vertex_shader;/* = "#version 410\n"
-					"layout(location = 0) in vec3 vertex_position;"
-					"layout(location = 1) in vec3 vertex_colour;"
-															"out vec3 colour;"
-															"uniform mat4 model;"
-															"uniform mat4 view;"
-															"uniform mat4 projection;"
-															"void main () {"
-															"colour = vertex_colour;"
-															"gl_Position = projection * view * model * vec4(vertex_position, 1.0);"
-															"}";*/
-	/* the fragment shader colours each fragment (pixel-sized area of the
-	triangle) */
-	const GLchar *fragment_shader;/* = "#version 410\n"
-																"in vec3 colour;"
-																"out vec4 frag_colour;"
-																"void main () {"
-																"  frag_colour = vec4(colour, 1.0);"
-																"}";*/
-	vertex_shader = get_shader_source("shaders/vertex.glsl");
-	fragment_shader = get_shader_source("shaders/fragment.glsl");
+	const GLchar *vertex_shader;
+	const GLchar *fragment_shader;
+	vertex_shader = get_shader_source("shaders/vertex2.glsl");
+	fragment_shader = get_shader_source("shaders/fragment2.glsl");
 	/* GL shader objects for vertex and fragment shader [components] */
 	GLuint vert_shader, frag_shader;
 	/* GL shader programme object [combined, to link] */
