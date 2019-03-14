@@ -5,6 +5,8 @@
 
 int g_e = 1;
 
+
+
 GLchar	*get_shader_source(char *filename)
 {
 	int		fd;
@@ -68,7 +70,7 @@ void	set_projection(t_mat4 *m, float fov)
 	m->m[5] = s;
 	m->m[10] = -(far + near) / (far - near);
 	m->m[11] = -1;
-  m->m[14] = -2 * far * near / (far - near);
+	m->m[14] = -2 * far * near / (far - near);
 }
 
 int main(int ac, char **av) {
@@ -85,7 +87,7 @@ int main(int ac, char **av) {
 	mat4_id(&view);
 	mat4_id(&model);
 	set_projection(&projection, 90);
-  view = mat4_translate(view, 0,0,-5);
+    view = mat4_translate(view, 0,0,-5);
 	GLuint ebo;
 	GLuint *indices = NULL;
 	GLfloat *points = NULL;
@@ -209,7 +211,7 @@ i = 0;
 			surface. hence the 'swap' idea. in a single-buffering system we would see
 			stuff being drawn one-after-the-other */
 	printfmat(mat4_mult(projection, mat4_mult(view, model)));
-
+	double lasttime = glfwGetTime();
 	while ( !glfwWindowShouldClose( window ) ) {
 		 glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
 		/* wipe the drawing surface clear */
@@ -221,7 +223,7 @@ i = 0;
 
 		if (g_e == 1)
 		{
-	//	model = mat4_rot_axis(model, AXIS_X, 0.5);
+		model = mat4_rot_axis(model, AXIS_X, 0.5);
 		//model = mat4_rot_axis(model, AXIS_Z, 0.25);
 		model = mat4_rot_axis(model, AXIS_Y, 1);
 		}
@@ -234,12 +236,19 @@ i = 0;
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.m );
 		glBindVertexArray( vao );
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
-   	glDrawElements( GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0 );
+   	    glDrawElements( GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0 );
 		/* update other events like input handling */
 		glfwPollEvents();
 		/* put the stuff we've been drawing onto the display */
 		glfwSwapBuffers( window );
-	}
+		frame_count++;
+		final_time = time(NULL);
+
+            while (glfwGetTime() < lasttime + 1.0/FPS)
+                            ;
+            lasttime += 1.0/FPS;
+        }
+
 	/* close GL context and any other GLFW resources */
 	glfwTerminate();
 	return 0;

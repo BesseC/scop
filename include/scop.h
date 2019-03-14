@@ -17,7 +17,9 @@
 #include <stdio.h>
 #include "libft.h"
 #include "libmat.h"
+#include "time.h"
 # define BUFFER_SIZE 128
+# define FPS 120
 
 int	load_obj(GLuint **indices, GLfloat **points, char *filename, int *nbv);
 #endif
