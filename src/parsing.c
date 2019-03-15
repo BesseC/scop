@@ -166,7 +166,7 @@ int		f;
 char	*line;
 t_vec3 center;
 
-int i = 1;
+//int i = 1;
 
 v = 0;
 f = 0;
@@ -175,13 +175,13 @@ f = 0;
 fd = open(filename, O_RDWR);
 while (get_next_line(fd, &line) > 0)
 {
-	printf("%d eme ligne \n",i );
+//	printf("%d eme ligne \n",i );
   if (line[0] == 'v' && line[1] == ' ')
     *points = append_vertices(*points, line, &v);
   else if (line[0] == 'f' && line[1] == ' ')
     *indices = append_indices(*indices, line, &f);
   ft_strdel(&line);
-	i++;
+	//i++;
 }
 center = compute_center_axis(*points, v);
 printf("\n%f %f %f\n",center.x, center.y, center.z);
