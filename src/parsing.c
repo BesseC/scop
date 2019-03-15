@@ -175,7 +175,7 @@ f = 0;
 fd = open(filename, O_RDWR);
 while (get_next_line(fd, &line) > 0)
 {
-	//printf("%d\n",i );
+	printf("%d eme ligne \n",i );
   if (line[0] == 'v' && line[1] == ' ')
     *points = append_vertices(*points, line, &v);
   else if (line[0] == 'f' && line[1] == ' ')

@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include "libft.h"
 #include "libmat.h"
-#include "time.h"
 # define BUFFER_SIZE 128
 # define FPS 120
 

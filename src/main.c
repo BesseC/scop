@@ -2,9 +2,10 @@
 
 #define WIDHT 1024
 #define HEIGHT 800
-
+#define COOLDOWN 20
 int g_e = 1;
-
+int key_cd = 0;
+int g_flat = 0;
 
 
 GLchar	*get_shader_source(char *filename)
@@ -31,10 +32,19 @@ GLchar	*get_shader_source(char *filename)
 t_mat4 key_callback(GLFWwindow* window, t_mat4 view)
 {
 		int key;
+		key_cd > 1 ? key_cd -= 1 : 0;
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, GL_TRUE);
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && key_cd <= 1)
+		{
 			g_e = !g_e;
+			key_cd = COOLDOWN;
+		}
+		if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && key_cd <= 1)
+        		{
+        			g_flat = !g_flat;
+        			key_cd = COOLDOWN;
+        		}
 		key = glfwGetKey(window, 333);
 		if (key == 1)
     	view = mat4_translate(view,0,0,0.25);
@@ -83,6 +93,7 @@ int main(int ac, char **av) {
 	t_mat4 projection;
 	GLint modelLocation;
 	GLint viewLocation;
+	GLint flat;
 	GLint projectionLocation;
 	mat4_id(&view);
 	mat4_id(&model);
@@ -230,10 +241,12 @@ i = 0;
 		modelLocation = glGetUniformLocation(shader_programme, "model");
 		viewLocation = glGetUniformLocation(shader_programme, "view");
 		projectionLocation = glGetUniformLocation(shader_programme, "projection");
+		flat = glGetUniformLocation(shader_programme, "flatmode");
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model.m );
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view.m );
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.m );
+		glUniform1i(flat, g_flat);
 		glBindVertexArray( vao );
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
    	    glDrawElements( GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0 );
@@ -241,8 +254,6 @@ i = 0;
 		glfwPollEvents();
 		/* put the stuff we've been drawing onto the display */
 		glfwSwapBuffers( window );
-		frame_count++;
-		final_time = time(NULL);
 
             while (glfwGetTime() < lasttime + 1.0/FPS)
                             ;
