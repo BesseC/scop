@@ -223,6 +223,10 @@ i = 0;
 			stuff being drawn one-after-the-other */
 	printfmat(mat4_mult(projection, mat4_mult(view, model)));
 	double lasttime = glfwGetTime();
+			modelLocation = glGetUniformLocation(shader_programme, "model");
+    		viewLocation = glGetUniformLocation(shader_programme, "view");
+    		projectionLocation = glGetUniformLocation(shader_programme, "projection");
+    		flat = glGetUniformLocation(shader_programme, "flatmode");
 	while ( !glfwWindowShouldClose( window ) ) {
 		 glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
 		/* wipe the drawing surface clear */
@@ -238,10 +242,7 @@ i = 0;
 		//model = mat4_rot_axis(model, AXIS_Z, 0.25);
 		model = mat4_rot_axis(model, AXIS_Y, 1);
 		}
-		modelLocation = glGetUniformLocation(shader_programme, "model");
-		viewLocation = glGetUniformLocation(shader_programme, "view");
-		projectionLocation = glGetUniformLocation(shader_programme, "projection");
-		flat = glGetUniformLocation(shader_programme, "flatmode");
+
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model.m );
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view.m );
