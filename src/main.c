@@ -95,12 +95,14 @@ int main(int ac, char **av) {
 	GLint viewLocation;
 	GLint flat;
 	GLint projectionLocation;
+	GLint textLocation;
 	mat4_id(&view);
 	mat4_id(&model);
 	set_projection(&projection, 90);
     view = mat4_translate(view, 0,0,-5);
 	GLuint ebo;
 	GLuint *indices = NULL;
+	GLuint texture;
 	GLfloat *points = NULL;
 	int idlen ;
 	int nbv ;
@@ -128,6 +130,13 @@ i = 0;
 	}
 */
 
+	t_text text;
+  	load_bmp(&text, "./32bsys.bmp");
+    printf("w = %d\n", text.width);
+    printf("h = %d\n", text.height);
+    printf("opp = %d\n", text.opp);
+    printf("size = %d\n", text.size);
+    printf("size = %d\n", text.line_size);
 
 	/* these are the strings of code for the shaders
 	the vertex shader positions each vertex point */
@@ -197,7 +206,21 @@ i = 0;
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)) );
 	glEnableVertexAttribArray(1);
-	glBindVertexArray(0);
+
+
+
+	glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, text.width, text.height, 0, GL_RGB, GL_UNSIGNED_BYTE, text.img);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+glBindVertexArray(0);
 	/* here we copy the shader strings into GL shaders, and compile them. we
 	then create an executable shader 'program' and attach both of the compiled
 			shaders. we link this, which matches the outputs of the vertex shader to
@@ -223,10 +246,13 @@ i = 0;
 			stuff being drawn one-after-the-other */
 	printfmat(mat4_mult(projection, mat4_mult(view, model)));
 	double lasttime = glfwGetTime();
-			modelLocation = glGetUniformLocation(shader_programme, "model");
-    		viewLocation = glGetUniformLocation(shader_programme, "view");
-    		projectionLocation = glGetUniformLocation(shader_programme, "projection");
-    		flat = glGetUniformLocation(shader_programme, "flatmode");
+	modelLocation = glGetUniformLocation(shader_programme, "model");
+    viewLocation = glGetUniformLocation(shader_programme, "view");
+    projectionLocation = glGetUniformLocation(shader_programme, "projection");
+    flat = glGetUniformLocation(shader_programme, "flatmode");
+    textLocation = glGetUniformLocation(shader_programme, "texture");
+
+
 	while ( !glfwWindowShouldClose( window ) ) {
 		 glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
 		/* wipe the drawing surface clear */
@@ -248,6 +274,7 @@ i = 0;
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view.m );
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.m );
 		glUniform1i(flat, g_flat);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray( vao );
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
    	    glDrawElements( GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0 );

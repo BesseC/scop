@@ -18,7 +18,18 @@
 #include "libft.h"
 #include "libmat.h"
 # define BUFFER_SIZE 128
-# define FPS 120
+# define FPS 60
 
-int	load_obj(GLuint **indices, GLfloat **points, char *filename, int *nbv);
+typedef struct s_text
+{
+    unsigned char *img;
+    int width;
+    int height;
+    int size;
+    int opp;
+    int line_size;
+}           t_text;
+
+int load_obj(GLuint **indices, GLfloat **points, char *filename, int *nbv);
+void    load_bmp(t_text *text, char *filename);
 #endif
