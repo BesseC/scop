@@ -6,7 +6,7 @@
 /*   By: cbesse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 13:01:09 by cbesse            #+#    #+#             */
-/*   Updated: 2019/01/16 13:01:11 by cbesse           ###   ########.fr       */
+/*   Updated: 2019/08/08 18:49:12 by cbesse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 void	read_header(char *filename, t_text *texture)
 {
 	int	fd;
-	int bpp = 0;
+	int bpp;
 
-	if ((fd = open(filename,  O_RDONLY)) == -1)
+	bpp = 0;
+	if ((fd = open(filename, O_RDONLY)) == -1)
 		exit(1);
 	lseek(fd, 18, SEEK_SET);
 	read(fd, &texture->width, 4);
@@ -41,7 +42,7 @@ void	get_image(t_text *texture, char *temp, int i)
 	h = 0;
 	size = texture->size * 2;
 	texture->img = (unsigned char*)malloc(sizeof(unsigned char) * size);
-	while (i >= 0)
+	while (i > 0)
 	{
 		i -= texture->line_size;
 		j = 0;

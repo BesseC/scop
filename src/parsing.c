@@ -6,7 +6,7 @@
 /*   By: cbesse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 12:07:45 by cbesse            #+#    #+#             */
-/*   Updated: 2019/01/10 12:07:47 by cbesse           ###   ########.fr       */
+/*   Updated: 2019/08/08 18:50:57 by cbesse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,6 @@ GLuint	*gluint_array_copy(GLuint *array, int length, int m)
 	return (new);
 }
 
-GLfloat *set_color(GLfloat *array, int length)
-{
-   if(length/6%3 == 0)
-   {
-    array[length - 3] = 1.0f;
-    array[length - 2] = 0.0f;
-    array[length - 1] = 0.0f;
-  }
-  else if(length/6%3 == 1)
-  {
-    array[length - 3] = 0.0f;
-    array[length - 2] = 1.0f;
-    array[length - 1] = 0.0f;
-  }
-  else if(length/6%3 == 2)
-  {
-    array[length - 3] = 0.0f;
-    array[length - 2] = 0.0f;
-    array[length - 1] = 1.0f;
-  }
-  return (array);
-}
-
 t_vec3	compute_center_axis(GLfloat *vertices, int num_vertices)
 {
 	int		i;
@@ -86,23 +63,17 @@ t_vec3	compute_center_axis(GLfloat *vertices, int num_vertices)
 
 GLfloat	*center_vertices(GLfloat *vertices, t_vec3 center, int length)
 {
-	int		i;
-	//float	tx;
-	//float	theta;
+	int	i;
 
 	i = 0;
-	//theta = 90 * (M_PI / 180);
 	while (i < length)
 	{
 		vertices[i] -= center.x;
 		vertices[i + 1] -= center.y;
 		vertices[i + 2] -= center.z;
-		/*tx = vertices[i] * cos(theta) - vertices[i + 2] * sin(theta);
-		vertices[i + 2] = vertices[i] * sin(theta) + vertices[i + 2] * cos(theta);
-		vertices[i] = tx;*/
 		i += 6;
 	}
-	return(vertices);
+	return (vertices);
 }
 
 GLfloat	*append_vertices(GLfloat *array, char *line, int *length)
@@ -126,7 +97,6 @@ GLfloat	*append_vertices(GLfloat *array, char *line, int *length)
 		array[*length - 6 + j] = (GLfloat)ft_atof(tab[j]);
 		ft_strdel(&tab[j]);
 	}
-  array = set_color(array, *length);
 	ft_strdel(&tab[j]);
 	free(tab);
 	tab = NULL;
@@ -149,7 +119,7 @@ GLuint	*append_indices(GLuint *array, char *line, int *length)
 		array[*length - m + j] = (GLuint)ft_atoi(tab[j]) - 1;
 		if (m == 6)
 			array[*length - m + 3 + j] =
-			(GLuint)ft_atoi(tab[j > 0 ? j + 1 : 0]) - 1;
+				(GLuint)ft_atoi(tab[j > 0 ? j + 1 : 0]) - 1;
 		ft_strdel(&tab[j]);
 	}
 	ft_strdel(&tab[j]);
@@ -158,35 +128,30 @@ GLuint	*append_indices(GLuint *array, char *line, int *length)
 	return (array);
 }
 
-int	load_obj(GLuint **indices, GLfloat **points, char *filename, int *nbv)
+int		load_obj(GLuint **indices, GLfloat **points, char *filename, int *nbv)
 {
-int		fd;
-int		v;
-int		f;
-char	*line;
-t_vec3 center;
+	int		fd;
+	int		v;
+	int		f;
+	char	*line;
+	t_vec3	center;
 
-//int i = 1;
-
-v = 0;
-f = 0;
-*points = (GLfloat*)malloc(sizeof(GLfloat) * 3);
-*indices = (GLuint*)malloc(sizeof(GLuint) * 3);
-fd = open(filename, O_RDWR);
-while (get_next_line(fd, &line) > 0)
-{
-//	printf("%d eme ligne \n",i );
-  if (line[0] == 'v' && line[1] == ' ')
-    *points = append_vertices(*points, line, &v);
-  else if (line[0] == 'f' && line[1] == ' ')
-    *indices = append_indices(*indices, line, &f);
-  ft_strdel(&line);
-	//i++;
-}
-center = compute_center_axis(*points, v);
-printf("\n%f %f %f\n",center.x, center.y, center.z);
-*points = center_vertices(*points, center, v);
-ft_strdel(&line);
-*nbv = v;
-return(f);
+	v = 0;
+	f = 0;
+	*points = (GLfloat*)malloc(sizeof(GLfloat) * 3);
+	*indices = (GLuint*)malloc(sizeof(GLuint) * 3);
+	fd = open(filename, O_RDWR);
+	while (get_next_line(fd, &line) > 0)
+	{
+		if (line[0] == 'v' && line[1] == ' ')
+			*points = append_vertices(*points, line, &v);
+		else if (line[0] == 'f' && line[1] == ' ')
+			*indices = append_indices(*indices, line, &f);
+		ft_strdel(&line);
+	}
+	center = compute_center_axis(*points, v);
+	*points = center_vertices(*points, center, v);
+	ft_strdel(&line);
+	*nbv = v;
+	return (f);
 }
