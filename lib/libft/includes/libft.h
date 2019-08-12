@@ -95,4 +95,5 @@ void			ft_lstremove(t_list **begin_list, int data_ref);
 int				get_next_line(int const fd, char **line);
 double			ft_atof(const char *str);
 int				ft_nmotsplit(const char *s, char c);
+int				ft_arraylen(void **tab);
 #endif

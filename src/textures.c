@@ -41,7 +41,7 @@ void	get_image(t_text *texture, char *temp, int i)
 
 	h = 0;
 	size = texture->size * 2;
-	texture->img = (unsigned char*)malloc(sizeof(unsigned char) * size);
+	texture->img = (unsigned char*)ft_memalloc(sizeof(unsigned char) * size);
 	while (i > 0)
 	{
 		i -= texture->line_size;
@@ -64,7 +64,7 @@ void	load_bmp(t_text *text, char *filename)
 	char	*temp;
 
 	read_header(filename, text);
-	temp = (char*)malloc(sizeof(char) * text->size + 1);
+	temp = (char*)ft_memalloc(sizeof(char) * text->size + 1);
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		exit(1);
 	lseek(fd, 54, SEEK_SET);

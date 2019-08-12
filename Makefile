@@ -7,10 +7,10 @@ LIB_PATH = ./lib/
 INC_PATH = ./include/ $(LIB_PATH)libft/includes/ $(LIB_PATH)glfw/include/ \
 		   			$(LIB_PATH)glew/include/ $(LIB_PATH)libmat/includes/
 
-GCC_FLGS = -pedantic -Wall -Wextra
+GCC_FLGS = -pedantic -Wall -Wextra -Werror
 GCC_LIBS = lib/glfw/src/libglfw3.a lib/glew/lib/libGLEW.a  -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo
 
-SRC_NAME = main.c parsing.c textures.c
+SRC_NAME = main.c parsing.c textures.c utils.c input.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 LIB_NAME = libft libmat glew/lib glfw/src
@@ -28,7 +28,7 @@ $(NAME): $(OBJ)
 				$(CC) $(GCC_FLGS) $(LIB) -lft -lmat $(INC) $(OBJ) $(GCC_LIBS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-		mkdir -p $(OBJ_PATH)
+		@ mkdir -p $(OBJ_PATH)
 			$(CC) $(GCC_FLGS) $(INC) -o $@ -c $<
 
 clean:

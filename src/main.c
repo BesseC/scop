@@ -11,72 +11,6 @@
 /* ************************************************************************** */
 
 #include "scop.h"
-#define WIDHT 1024
-#define HEIGHT 800
-#define COOLDOWN 20
-
-int g_e = 1;
-int key_cd = 0;
-int g_flat = 0;
-
-GLchar	*get_shader_source(char *filename)
-{
-	int		fd;
-	int		ret;
-	char	buffer[BUFFER_SIZE];
-	char	*source;
-	char	*del;
-
-	source = ft_strnew(BUFFER_SIZE);
-	fd = open(filename, O_RDONLY);
-	while ((ret = read(fd, buffer, BUFFER_SIZE)))
-	{
-		buffer[ret] = '\0';
-		del = source;
-		source = ft_strjoin(source, buffer);
-		ft_strdel(&del);
-	}
-	close(fd);
-	return (source);
-}
-
-t_mat4	key_callback(GLFWwindow* window, t_mat4 view)
-{
-	int key;
-
-	key_cd > 1 ? key_cd -= 1 : 0;
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && key_cd <= 1)
-	{
-		g_e = !g_e;
-		key_cd = COOLDOWN;
-	}
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && key_cd <= 1)
-	{
-		g_flat = !g_flat;
-		key_cd = COOLDOWN;
-	}
-	key = glfwGetKey(window, 333);
-	if (key == 1)
-		view = mat4_translate(view, 0, 0, -0.25);
-	key = glfwGetKey(window, 334);
-	if (key == 1)
-		view = mat4_translate(view, 0, 0, 0.25);
-	key = glfwGetKey(window, 263);
-	if (key == 1)
-		view = mat4_translate(view, 0.25, 0, 0);
-	key = glfwGetKey(window, 262);
-	if (key == 1)
-		view = mat4_translate(view, -0.25, 0, 0);
-	key = glfwGetKey(window, 265);
-	if (key == 1)
-		view = mat4_translate(view, 0, 0.25, 0);
-	key = glfwGetKey(window, 264);
-	if (key == 1)
-		view = mat4_translate(view, 0, -0.25, 0);
-	return (view);
-}
 
 void	set_projection(t_mat4 *m, float fov)
 {
@@ -96,6 +30,19 @@ void	set_projection(t_mat4 *m, float fov)
 }
 
 int	main(int ac, char **av) {
+
+	if (ac != 2)
+		return (1);
+	
+	t_option option;
+	option.stop_rot = 0;
+	option.flat_color = 0;
+	option.gray_color = 0;
+	option.text_mode = 1;
+	option.key_cooldown = 0;
+
+	t_shader shader;
+	
 	GLFWwindow *window = NULL;
 	const GLubyte *renderer;
 	const GLubyte *version;
@@ -103,11 +50,6 @@ int	main(int ac, char **av) {
 	t_mat4 view;
 	t_mat4 model;
 	t_mat4 projection;
-	GLint modelLocation;
-	GLint viewLocation;
-	GLint flat;
-	GLint projectionLocation;
-	GLint textLocation;
 	mat4_id(&view);
 	mat4_id(&model);
 	set_projection(&projection, 90);
@@ -172,7 +114,7 @@ int	main(int ac, char **av) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WIDHT, HEIGHT, "Hello Triangle", NULL, NULL);
+	window = glfwCreateWindow(WIDHT, HEIGHT, "Scop", NULL, NULL);
 	if (!window)
 	{
 		fprintf(stderr, "ERROR: could not open window with GLFW3\n");
@@ -216,10 +158,10 @@ int	main(int ac, char **av) {
 	   VBO's data the following vertex attribute pointer refers to */
 	/* "attribute #0 is created from every 3 variables in the above buffer, of type
 	   float (i.e. make me vec3s)" */
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	// glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	// glEnableVertexAttribArray(1);
 
 
 
@@ -249,7 +191,7 @@ int	main(int ac, char **av) {
 	glAttachShader(shader_programme, frag_shader);
 	glAttachShader(shader_programme, vert_shader);
 	glBindAttribLocation(shader_programme, 0, "vertex_position");
-	glBindAttribLocation(shader_programme, 1, "vertex_colour");
+	// glBindAttribLocation(shader_programme, 1, "vertex_colour");
 	glLinkProgram(shader_programme);
 	/* this loop clears the drawing surface, then draws the geometry described
 	   by the VAO onto the drawing surface. we 'poll events' to see if the window
@@ -260,11 +202,13 @@ int	main(int ac, char **av) {
 	   stuff being drawn one-after-the-other */
 	printfmat(mat4_mult(projection, mat4_mult(view, model)));
 	double lasttime = glfwGetTime();
-	modelLocation = glGetUniformLocation(shader_programme, "model");
-	viewLocation = glGetUniformLocation(shader_programme, "view");
-	projectionLocation = glGetUniformLocation(shader_programme, "projection");
-	flat = glGetUniformLocation(shader_programme, "flatmode");
-	textLocation = glGetUniformLocation(shader_programme, "texture");
+	shader.model_location = glGetUniformLocation(shader_programme, "model");
+	shader.view_location = glGetUniformLocation(shader_programme, "view");
+	shader.projection_location = glGetUniformLocation(shader_programme, "projection");
+	shader.flat = glGetUniformLocation(shader_programme, "flatmode");
+	shader.gray = glGetUniformLocation(shader_programme, "graymode");
+	shader.text_mode = glGetUniformLocation(shader_programme, "textmode");
+	shader.text_location = glGetUniformLocation(shader_programme, "texture");
 
 	while (!glfwWindowShouldClose(window ))
 	{
@@ -272,11 +216,11 @@ int	main(int ac, char **av) {
 		/* wipe the drawing surface clear */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_programme);
-		view = key_callback(window, view);
+		view = key_callback(window, view, &option);
 		/*	printfmat(view);
 			printf("\n");*/
 
-		if (g_e == 1)
+		if (option.stop_rot == 0)
 		{
 			model = mat4_rot_axis(model, AXIS_X, 0.5);
 			//model = mat4_rot_axis(model, AXIS_Z, 0.25);
@@ -284,10 +228,12 @@ int	main(int ac, char **av) {
 		}
 
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model.m);
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view.m);
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.m);
-		glUniform1i(flat, g_flat);
+		glUniformMatrix4fv(shader.model_location, 1, GL_FALSE, model.m);
+		glUniformMatrix4fv(shader.view_location, 1, GL_FALSE, view.m);
+		glUniformMatrix4fv(shader.projection_location, 1, GL_FALSE, projection.m);
+		glUniform1i(shader.flat, option.flat_color);
+		glUniform1i(shader.gray, option.gray_color);
+		glUniform1i(shader.text_mode, option.text_mode);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(vao);
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */

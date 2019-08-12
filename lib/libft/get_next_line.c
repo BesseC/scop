@@ -43,8 +43,8 @@ int					get_next_line(int const fd, char **line)
 
 t_content			*ft_content_init(t_list **list, int fd)
 {
-	t_content       *content;
-	t_list			*tmp;
+	t_content	*content;
+	t_list		*tmp;
 
 	tmp = *list;
 	while (tmp)
