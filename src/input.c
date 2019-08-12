@@ -53,12 +53,12 @@ t_mat4	key_callback(GLFWwindow *window, t_mat4 view, t_option *op)
 		op->flat_color = !op->flat_color;
 		op->key_cooldown = COOLDOWN;
 	}
-		if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS && op->key_cooldown <= 1)
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS && op->key_cooldown <= 1)
 	{
 		op->gray_color = !op->gray_color;
 		op->key_cooldown = COOLDOWN;
 	}
-		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && op->key_cooldown <= 1)
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && op->key_cooldown <= 1)
 	{
 		op->text_mode = !op->text_mode;
 		op->key_cooldown = COOLDOWN;

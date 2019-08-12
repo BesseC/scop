@@ -44,7 +44,8 @@ typedef struct s_option
     int key_cooldown; 
 } t_option;
 
-typedef struct s_shader {
+typedef struct s_shader
+{
 	GLint model_location;
 	GLint view_location;
 	GLint flat;
@@ -53,6 +54,16 @@ typedef struct s_shader {
 	GLint projection_location;
 	GLint text_location;
 }				t_shader;
+
+typedef struct s_buffer
+{
+	GLuint vao;
+	GLuint vbo;
+	GLuint ebo;
+	GLuint *indices;
+	GLfloat *points;
+	GLuint texture;
+}				t_buffer;
 
 int				load_obj(GLuint **indices, GLfloat **points
 						, char *filename, int *nbv);

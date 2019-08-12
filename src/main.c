@@ -33,20 +33,20 @@ int	main(int ac, char **av) {
 
 	if (ac != 2)
 		return (1);
-	
+
 	t_option option;
 	option.stop_rot = 0;
 	option.flat_color = 0;
 	option.gray_color = 0;
 	option.text_mode = 1;
 	option.key_cooldown = 0;
-
-	t_shader shader;
 	
+	t_buffer buffer;
+	t_shader shader;
+
 	GLFWwindow *window = NULL;
 	const GLubyte *renderer;
 	const GLubyte *version;
-	GLuint vao;
 	t_mat4 view;
 	t_mat4 model;
 	t_mat4 projection;
@@ -54,13 +54,9 @@ int	main(int ac, char **av) {
 	mat4_id(&model);
 	set_projection(&projection, 90);
 	view = mat4_translate(view, 0, 0, -5);
-	GLuint ebo;
-	GLuint *indices = NULL;
-	GLuint texture;
-	GLfloat *points = NULL;
 	int idlen;
 	int nbv;
-	idlen = load_obj(&indices, &points, av[1], &nbv);
+	idlen = load_obj(&buffer.indices, &buffer.points, av[1], &nbv);
 	/*
 	   printf("     VERTEX       |       COLOR\n");
 	   int i = 0;
@@ -139,15 +135,14 @@ int	main(int ac, char **av) {
 	   data on the graphics adapter's memory. in our case - the vertex points */
 
 
-	GLuint vbo = 0;
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof( GLfloat ) * nbv, points, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof( GLuint ) * idlen, indices, GL_STATIC_DRAW);
+	glGenVertexArrays(1, &buffer.vao);
+	glGenBuffers(1, &buffer.vbo);
+	glGenBuffers(1, &buffer.ebo);
+	glBindVertexArray(buffer.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof( GLfloat ) * nbv, buffer.points, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof( GLuint ) * idlen, buffer.indices, GL_STATIC_DRAW);
 
 	/* the vertex array object (VAO) is a little descriptor that defines which
 	   data from vertex buffer objects should be used as input variables to vertex
@@ -165,8 +160,8 @@ int	main(int ac, char **av) {
 
 
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &buffer.texture);
+	glBindTexture(GL_TEXTURE_2D, buffer.texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -234,8 +229,8 @@ int	main(int ac, char **av) {
 		glUniform1i(shader.flat, option.flat_color);
 		glUniform1i(shader.gray, option.gray_color);
 		glUniform1i(shader.text_mode, option.text_mode);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glBindVertexArray(vao);
+		glBindTexture(GL_TEXTURE_2D, buffer.texture);
+		glBindVertexArray(buffer.vao);
 		/* draw points 0-3 from the currently bound VAO with current in-use shader */
 		glDrawElements(GL_TRIANGLES, idlen, GL_UNSIGNED_INT, 0);
 		/* update other events like input handling */
