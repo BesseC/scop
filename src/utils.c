@@ -12,6 +12,12 @@
 
 #include "scop.h"
 
+void	print_to_exit(char *msg)
+{
+	ft_putendl(msg);
+	exit(1);
+}
+
 GLuint	*gluint_array_copy(GLuint *array, int length, int m)
 {
 	int		i;

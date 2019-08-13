@@ -70,7 +70,7 @@ void	init_window(t_env *env)
 	env->window = glfwCreateWindow(WIDHT, HEIGHT, "Scop", NULL, NULL);
 	if (!env->window)
 	{
-		fprintf(stderr, "ERROR: could not open window with GLFW3\n");
+		ft_putendl("ERROR: could not open window with GLFW3");
 		glfwTerminate();
 		exit(1);
 	}
@@ -93,17 +93,17 @@ void	init(t_env *env, char *av)
 	env->option.text_mode = 1;
 	env->option.key_cooldown = 0;
 	if (!glfwInit())
-	{
-		fprintf(stderr, "ERROR: could not start GLFW3\n");
-		exit(1);
-	}
+		print_to_exit("ERROR: could not start GLFW3");
 	init_window(env);
 	glewExperimental = GL_TRUE;
 	glewInit();
 	env->renderer = glGetString(GL_RENDERER);
 	env->version = glGetString(GL_VERSION);
-	printf("Renderer: %s\n", env->renderer);
-	printf("OpenGL version supported %s\n", env->version);
+	ft_putstr("Renderer: ");
+	ft_putstr((char *)env->renderer);
+	ft_putstr("\nOpenGL version supported ");
+	ft_putstr((char *)env->version);
+	ft_putchar('\n');
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	init_buffers(&env->buffer, av);

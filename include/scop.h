@@ -99,4 +99,5 @@ t_mat4					key_callback(GLFWwindow *window
 void					init(t_env *env, char *av);
 void					bind_texture(t_buffer *buffer);
 void					set_projection(t_mat4 *m, float fov);
+void					print_to_exit(char *msg);
 #endif

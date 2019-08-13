@@ -34,7 +34,7 @@ int		main(int ac, char **av)
 	t_env	env;
 
 	if (ac != 2)
-		return (1);
+		print_to_exit("usage: ./scop file.obj");
 	init(&env, av[1]);
 	lasttime = glfwGetTime();
 	while (!glfwWindowShouldClose(env.window))
