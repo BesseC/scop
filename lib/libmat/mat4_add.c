@@ -22,13 +22,3 @@ t_mat4	mat4_add(t_mat4 m1, t_mat4 m2)
 		m3.m[i] = m1.m[i] + m2.m[i];
 	return (m3);
 }
-
-void printfmat(t_mat4 mat)
-{
-	for(int i = 0; i < 16;i++)
-	{
-		printf("%0.2f ", mat.m[i]);
-		if (i % 4 == 3)
-			printf("\n");
-	}
-}

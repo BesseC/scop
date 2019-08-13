@@ -12,6 +12,25 @@
 
 #include "scop.h"
 
+void	bind_texture(t_buffer *buffer)
+{
+	t_text text;
+
+	load_bmp(&text, TEXTURE_PATH);
+	glGenTextures(1, &buffer->texture);
+	glBindTexture(GL_TEXTURE_2D, buffer->texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, text.width, text.height,
+			0, GL_RGB, GL_UNSIGNED_BYTE, text.img);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+	ft_strdel((char**)&text.img);
+}
+
 void	read_header(char *filename, t_text *texture)
 {
 	int	fd;

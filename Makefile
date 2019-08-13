@@ -10,7 +10,7 @@ INC_PATH = ./include/ $(LIB_PATH)libft/includes/ $(LIB_PATH)glfw/include/ \
 GCC_FLGS = -pedantic -Wall -Wextra -Werror
 GCC_LIBS = lib/glfw/src/libglfw3.a lib/glew/lib/libGLEW.a  -framework AppKit -framework OpenGL -framework IOKit -framework CoreVideo
 
-SRC_NAME = main.c parsing.c textures.c utils.c input.c
+SRC_NAME = main.c parsing.c textures.c utils.c input.c init.c
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 LIB_NAME = libft libmat glew/lib glfw/src

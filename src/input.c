@@ -37,11 +37,8 @@ t_mat4	mouvement(GLFWwindow *window, t_mat4 view)
 	return (view);
 }
 
-t_mat4	key_callback(GLFWwindow *window, t_mat4 view, t_option *op)
+void	option_key(GLFWwindow *window, t_option *op)
 {
-	op->key_cooldown > 1 ? op->key_cooldown -= 1 : 0;
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS
 				&& op->key_cooldown <= 1)
 	{
@@ -63,6 +60,14 @@ t_mat4	key_callback(GLFWwindow *window, t_mat4 view, t_option *op)
 		op->text_mode = !op->text_mode;
 		op->key_cooldown = COOLDOWN;
 	}
+}
+
+t_mat4	key_callback(GLFWwindow *window, t_mat4 view, t_option *op)
+{
+	op->key_cooldown > 1 ? op->key_cooldown -= 1 : 0;
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	option_key(window, op);
 	view = mouvement(window, view);
 	return (view);
 }

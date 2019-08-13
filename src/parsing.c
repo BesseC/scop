@@ -32,7 +32,6 @@ t_vec3	compute_center_axis(GLfloat *vertices, int num_vertices)
 		vertices[i + 2] < min.z ? min.z = vertices[i + 2] : 0;
 		i += 3;
 	}
-	printf("\n----  %f, %f  ---\n", min.y, max.y);
 	center = vec3_mult(vec3_add(max, min), 0.5);
 	return (center);
 }

@@ -46,3 +46,20 @@ GLchar	*get_shader_source(char *filename)
 	close(fd);
 	return (source);
 }
+
+void	set_projection(t_mat4 *m, float fov)
+{
+	float	s;
+	float	far;
+	float	near;
+
+	far = 100.0;
+	near = 0.1;
+	s = 1 / (tan(fov * 0.5 * M_PI / 180.0));
+	set_mat4(m, 0);
+	m->m[0] = s / ((float)(WIDHT / HEIGHT));
+	m->m[5] = s;
+	m->m[10] = -(far + near) / (far - near);
+	m->m[11] = -1;
+	m->m[14] = -2 * far * near / (far - near);
+}
