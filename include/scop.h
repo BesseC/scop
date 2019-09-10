@@ -6,7 +6,7 @@
 /*   By: cbesse <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 14:21:28 by cbesse            #+#    #+#             */
-/*   Updated: 2019/08/13 16:41:00 by cbesse           ###   ########.fr       */
+/*   Updated: 2019/09/10 14:21:05 by cbesse           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define COOLDOWN 20
 # define VERTEX_SHADER "shaders/vertex.glsl"
 # define FRAGMENT_SHADER "shaders/fragment.glsl"
-# define TEXTURE_PATH "./32bsys.bmp"
+# define TEXTURE_PATH "./chaton.bmp"
 # define MAJOR_VERSION 4
 # define MINOR_VERSION 1
 
